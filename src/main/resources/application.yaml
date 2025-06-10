@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: device-challenge
+  profiles:
+    active: local
+
