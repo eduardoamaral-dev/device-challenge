@@ -1,14 +1,17 @@
 package eduardoamaral.devicechallenge.components.device.service;
 
 import eduardoamaral.devicechallenge.components.device.dto.DeviceQuery;
-import eduardoamaral.devicechallenge.components.device.domain.models.Device;
+import eduardoamaral.devicechallenge.components.device.dto.DeviceRequestDTO;
+import eduardoamaral.devicechallenge.components.device.dto.DeviceResponseDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface DeviceService {
-    Device create(Device device);
-    Device update(Device device);
-    Device searchDevices(DeviceQuery query);
-    Device getDevice(UUID deviceId);
-    Device getAllDevices();
+    DeviceResponseDTO create(DeviceRequestDTO device);
+    DeviceResponseDTO update(DeviceRequestDTO device);
+    List<DeviceResponseDTO> searchDevices(DeviceQuery query);
+    DeviceResponseDTO getDevice(UUID deviceId);
+    List<DeviceResponseDTO> getAllDevices();
+    boolean tryDeleteDevice(UUID deviceId);
 }
