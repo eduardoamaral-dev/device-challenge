@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,15 +34,21 @@ public class DeviceServiceImpl implements DeviceService {
         return List.of();
     }
 
-    public DeviceResponseDTO getDevice(UUID deviceId) {
-        return null;
+    public Optional<DeviceResponseDTO> getDevice(String deviceId) {
+        return deviceRepository
+                .findById(UUID.fromString(deviceId))
+                .map(deviceMapper::toResponse);
     }
 
     public List<DeviceResponseDTO> getAllDevices() {
-        return List.of();
+        return deviceRepository
+                .findAll()
+                .stream()
+                .map(deviceMapper::toResponse)
+                .toList();
     }
 
-    public boolean tryDeleteDevice(UUID deviceId) {
-        return false;
+    public void deleteDevice(String deviceId) {
+        deviceRepository.deleteById(UUID.fromString(deviceId));
     }
 }
