@@ -6,11 +6,14 @@ import eduardoamaral.devicechallenge.components.device.service.DeviceService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
+import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -21,11 +24,13 @@ public class DeviceController {
 
     @PostMapping("/add")
     public ResponseEntity<DeviceResponseDTO> addDevice(@Valid @RequestBody DeviceRequestDTO request){
-        return ok(deviceService.create(request));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(deviceService.create(request));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<DeviceResponseDTO>> search(
+    public ResponseEntity<List<DeviceResponseDTO>> search( // TODO: work on that later
             @RequestParam String brand,
             @RequestParam String valid,
             @RequestParam String name
