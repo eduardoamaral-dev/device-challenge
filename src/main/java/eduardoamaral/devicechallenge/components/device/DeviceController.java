@@ -21,14 +21,12 @@ public class DeviceController {
         return ok(deviceService.create(request));
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<DeviceResponseDTO> search(
-//            @RequestParam String model,
-//            @RequestParam String valid,
-//            @RequestParam String name
-//            ){
-//        return null;
-//    }
-
-
+    @GetMapping("/search")
+    public ResponseEntity<DeviceResponseDTO> search(
+            @RequestParam String model,
+            @RequestParam String valid,
+            @RequestParam String name
+            ){
+        return null;
+    }
 }

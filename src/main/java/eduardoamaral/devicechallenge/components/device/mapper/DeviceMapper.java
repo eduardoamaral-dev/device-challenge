@@ -4,40 +4,41 @@ import eduardoamaral.devicechallenge.components.device.dto.DeviceRequestDTO;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceResponseDTO;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceState;
 import eduardoamaral.devicechallenge.shared.persistence.model.DeviceEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.UUID;
 
-@Mapper
-public interface DeviceMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "state", source = "state", qualifiedByName = "stringToDeviceState")
-    DeviceEntity toEntity(DeviceRequestDTO dto);
+@Component
+public class DeviceMapper {
 
-    @Mapping(target = "id", qualifiedByName = "uuidToString")
-    @Mapping(target = "state", qualifiedByName = "deviceStateToString")
-    DeviceResponseDTO toResponse(DeviceEntity entity);
+    public DeviceEntity toEntity(DeviceRequestDTO dto){
+        return DeviceEntity.builder()
+                .brand(dto.getBrand())
+                .name(dto.getName())
+                .state(stringToDeviceState(dto.getState()))
+                .build();
+    }
 
-    default Instant map(LocalDateTime localDateTime) {
+    public DeviceResponseDTO toResponse(DeviceEntity entity){
+        return DeviceResponseDTO.builder()
+                .brand(entity.getBrand())
+                .name(entity.getName())
+                .state(deviceStateToString(entity.getState()))
+                .createdAt(dateToInstant(entity.getCreatedAt()))
+                .id(entity.getId().toString())
+                .build();
+    }
+
+    private Instant dateToInstant(LocalDateTime localDateTime) {
         if (localDateTime == null) {
             return null;
         }
         return localDateTime.toInstant(ZoneOffset.UTC);
     }
 
-    @Named("uuidToString")
-    default String uuidToString(UUID id){
-        return id.toString();
-    }
-
-    @Named("stringToDeviceState")
-    default DeviceState stringToDeviceState(String state) {
+    private DeviceState stringToDeviceState(String state) {
         if (state == null) {
             return null;
         }
@@ -45,8 +46,7 @@ public interface DeviceMapper {
         return DeviceState.valueOf(normalized);
     }
 
-    @Named("deviceStateToString")
-    default String deviceStateToString(DeviceState state) {
+    private String deviceStateToString(DeviceState state) {
         if (state == null) {
             return null;
         }
