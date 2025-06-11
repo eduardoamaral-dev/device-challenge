@@ -10,9 +10,11 @@ import java.util.UUID;
 
 public interface DeviceService {
     DeviceResponseDTO create(DeviceRequestDTO device);
-    DeviceResponseDTO update(DeviceRequestDTO device);
+    DeviceResponseDTO update(String id, DeviceRequestDTO request);
     List<DeviceResponseDTO> searchDevices(DeviceQuery query);
-    Optional<DeviceResponseDTO> getDevice(String deviceId);
+    List<DeviceResponseDTO> getByBrand(String brand);
+    List<DeviceResponseDTO> getByName(String name);
+    Optional<DeviceResponseDTO> getById(String deviceId);
     List<DeviceResponseDTO> getAllDevices();
     void deleteDevice(String deviceId);
 }

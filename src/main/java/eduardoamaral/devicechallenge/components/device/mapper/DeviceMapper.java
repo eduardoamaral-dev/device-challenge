@@ -38,7 +38,7 @@ public class DeviceMapper {
         return localDateTime.toInstant(ZoneOffset.UTC);
     }
 
-    private DeviceState stringToDeviceState(String state) {
+    public DeviceState stringToDeviceState(String state) {
         if (state == null) {
             return null;
         }

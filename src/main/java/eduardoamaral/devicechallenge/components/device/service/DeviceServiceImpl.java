@@ -4,11 +4,14 @@ import eduardoamaral.devicechallenge.components.device.dto.DeviceQuery;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceRequestDTO;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceResponseDTO;
 import eduardoamaral.devicechallenge.components.device.mapper.DeviceMapper;
+import eduardoamaral.devicechallenge.shared.persistence.model.DeviceEntity;
 import eduardoamaral.devicechallenge.shared.persistence.repository.DeviceRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,15 +29,51 @@ public class DeviceServiceImpl implements DeviceService {
         );
     }
 
-    public DeviceResponseDTO update(DeviceRequestDTO device) {
-        return null;
+    @Transactional
+    public DeviceResponseDTO update(String id, DeviceRequestDTO request) throws NoSuchElementException {
+        DeviceEntity device = deviceRepository
+                .findById(UUID.fromString(id))
+                .orElseThrow();
+
+        if(device.isInUse()){
+            throw new IllegalStateException("Devices in use cannot be updated.");
+        }
+
+        if (request.getBrand() != null) {
+            device.setBrand(request.getBrand());
+        }
+        if (request.getName() != null) {
+            device.setName(request.getName());
+        }
+        if (request.getState() != null) {
+            device.setState(deviceMapper.stringToDeviceState(request.getState()));
+        }
+
+        DeviceEntity updatedDevice = deviceRepository.save(device);
+        return deviceMapper.toResponse(updatedDevice);
+    }
+
+    public List<DeviceResponseDTO> getByBrand(String brand) {
+        return deviceRepository
+                .findByBrand(brand.trim())
+                .stream()
+                .map(deviceMapper::toResponse)
+                .toList();
+    }
+
+    public List<DeviceResponseDTO> getByName(String name) {
+        return deviceRepository
+                .findByName(name.trim())
+                .stream()
+                .map(deviceMapper::toResponse)
+                .toList();
     }
 
     public List<DeviceResponseDTO> searchDevices(DeviceQuery query) {
         return List.of();
     }
 
-    public Optional<DeviceResponseDTO> getDevice(String deviceId) {
+    public Optional<DeviceResponseDTO> getById(String deviceId) {
         return deviceRepository
                 .findById(UUID.fromString(deviceId))
                 .map(deviceMapper::toResponse);
@@ -49,6 +88,10 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     public void deleteDevice(String deviceId) {
+        var  entity = deviceRepository.findById(UUID.fromString(deviceId)).orElseThrow();
+        if(entity.isInUse()){
+            throw new IllegalStateException("Devices in use cannot be deleted.");
+        }
         deviceRepository.deleteById(UUID.fromString(deviceId));
     }
 }

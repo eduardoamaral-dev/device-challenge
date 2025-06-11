@@ -26,7 +26,7 @@ public class DeviceController {
 
     @GetMapping("/search")
     public ResponseEntity<List<DeviceResponseDTO>> search(
-            @RequestParam String model,
+            @RequestParam String brand,
             @RequestParam String valid,
             @RequestParam String name
             ){
@@ -40,14 +40,29 @@ public class DeviceController {
 
     @GetMapping("/find/{deviceId}")
     public ResponseEntity<DeviceResponseDTO> find(@PathVariable String deviceId){
-        return deviceService.getDevice(deviceId)
+        return deviceService.getById(deviceId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/find/brand/{brand}")
+    public ResponseEntity<List<DeviceResponseDTO>> getByBrand(@PathVariable String brand){
+        return ok(deviceService.getByBrand(brand));
+    }
+
+    @GetMapping("/find/name/{name}")
+    public ResponseEntity<List<DeviceResponseDTO>> getByName(@PathVariable String name){
+        return ok(deviceService.getByName(name));
     }
 
     @DeleteMapping("/remove/{deviceId}")
     public ResponseEntity<Object> removeDevice(@PathVariable String deviceId){
         deviceService.deleteDevice(deviceId);
         return ok().build();
+    }
+
+    @PatchMapping("/update/{deviceId}")
+    public ResponseEntity<DeviceResponseDTO> find(@PathVariable String deviceId, @RequestBody DeviceRequestDTO request){
+        return ok(deviceService.update(deviceId, request));
     }
 }

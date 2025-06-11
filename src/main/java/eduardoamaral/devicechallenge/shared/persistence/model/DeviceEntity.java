@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static eduardoamaral.devicechallenge.components.device.dto.DeviceState.IN_USE;
+
 
 @Entity
 @Table(name = "devices")
@@ -31,5 +33,9 @@ public class DeviceEntity {
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public boolean isInUse(){
+        return state == IN_USE;
     }
 }
