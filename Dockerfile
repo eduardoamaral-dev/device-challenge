@@ -1,4 +1,4 @@
-FROM openjdk:24
+FROM openjdk:21
 WORKDIR . .
 CMD ["./gradlew", "clean", "bootJar"]
 COPY build/libs/*.jar app.jar

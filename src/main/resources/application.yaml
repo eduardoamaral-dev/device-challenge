@@ -2,5 +2,7 @@ spring:
   application:
     name: device-challenge
   profiles:
-    active: dev
+    active: prod
 
+server:
+  port: 5000

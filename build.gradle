@@ -29,7 +29,7 @@ jacocoTestReport {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -58,6 +58,24 @@ dependencies {
 
 
 
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'eduardoamaral.devicechallenge.DeviceChallengeApplication'
+    }
+}
+
+tasks.register('fatJar', Jar) {
+    manifest {
+        attributes 'Main-Class': 'eduardoamaral.devicechallenge.DeviceChallengeApplication' // Substitua pelo seu main class
+    }
+    archiveBaseName = 'device-challenge'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.named('test') {
