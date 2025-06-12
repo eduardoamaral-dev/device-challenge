@@ -4,6 +4,7 @@ import eduardoamaral.devicechallenge.components.device.dto.DeviceRequestDTO;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceResponseDTO;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceState;
 import eduardoamaral.devicechallenge.shared.persistence.model.DeviceEntity;
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -43,7 +44,12 @@ public class DeviceMapper {
             return null;
         }
         String normalized = state.trim().toUpperCase().replace(" ", "_");
-        return DeviceState.valueOf(normalized);
+        try{
+            return DeviceState.valueOf(normalized);
+        }
+        catch(Exception e){
+            throw new ValidationException("Invalid device state: " + normalized);
+        }
     }
 
     private String deviceStateToString(DeviceState state) {

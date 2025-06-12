@@ -4,16 +4,14 @@ import eduardoamaral.devicechallenge.components.device.dto.DeviceRequestDTO;
 import eduardoamaral.devicechallenge.components.device.dto.DeviceResponseDTO;
 import eduardoamaral.devicechallenge.components.device.service.DeviceService;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -69,5 +67,10 @@ public class DeviceController {
     @PatchMapping("/update/{deviceId}")
     public ResponseEntity<DeviceResponseDTO> find(@PathVariable String deviceId, @RequestBody DeviceRequestDTO request){
         return ok(deviceService.update(deviceId, request));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<String> handleValidationExceptions(ValidationException ex) {
+        return ResponseEntity.unprocessableEntity().body("Request is invalid. Error : " + ex.getMessage());
     }
 }
