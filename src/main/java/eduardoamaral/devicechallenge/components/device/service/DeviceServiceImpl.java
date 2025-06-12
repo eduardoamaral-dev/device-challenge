@@ -39,7 +39,7 @@ public class DeviceServiceImpl implements DeviceService {
                 (request.getBrand() != null || request.getName() != null)
                  && device.isInUse()
         ){
-            throw new IllegalStateException("Devices in use cannot be updated.");
+            throw new IllegalStateException("Name and brand properties cannot be updated if the device is in use.");
         }
 
         if (request.getBrand() != null) {
