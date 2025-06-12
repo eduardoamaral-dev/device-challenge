@@ -102,7 +102,7 @@ public class DeviceServiceTest {
         mockMvc.perform(post("/devices/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
-                .andExpect(status().isUnprocessableEntity())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
