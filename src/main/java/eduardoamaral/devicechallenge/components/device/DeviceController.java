@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -71,6 +72,15 @@ public class DeviceController {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationExceptions(ValidationException ex) {
-        return ResponseEntity.unprocessableEntity().body("Request is invalid. Error : " + ex.getMessage());
+        return ResponseEntity.unprocessableEntity().body("Request is invalid. Error: " + ex.getMessage());
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleValidationExceptions(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body("Some error has occurred during device search. Error message: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleValidationExceptions(NoSuchElementException ex) {
+        return ResponseEntity.notFound().build();
     }
 }

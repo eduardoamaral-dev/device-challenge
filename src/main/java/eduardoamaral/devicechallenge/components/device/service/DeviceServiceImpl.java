@@ -54,11 +54,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     public List<DeviceResponseDTO> getByBrand(String brand) {
-        return deviceRepository
+        var response =  deviceRepository
                 .findByBrand(brand.trim())
                 .stream()
                 .map(deviceMapper::toResponse)
                 .toList();
+
+        if(response.isEmpty()) throw new NoSuchElementException();
+        return response;
     }
 
     public List<DeviceResponseDTO> getByName(String name) {
@@ -73,7 +76,7 @@ public class DeviceServiceImpl implements DeviceService {
         return List.of();
     }
 
-    public Optional<DeviceResponseDTO> getById(String deviceId) {
+    public Optional<DeviceResponseDTO> getById(String deviceId) throws IllegalArgumentException{
         return deviceRepository
                 .findById(UUID.fromString(deviceId))
                 .map(deviceMapper::toResponse);
