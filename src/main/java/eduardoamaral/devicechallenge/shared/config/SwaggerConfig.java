@@ -18,12 +18,19 @@ public class SwaggerConfig {
                                 Welcome to the device challenge api docs, here you can check the features implemented so far:
                                 
                                 Required:
+                                
                                 • Create a new device ✅
+                                
                                 • Fully and/or partially update an existing device ✅
+                                
                                 • Fetch a single device ✅
+                                
                                 • Fetch all devices ✅
+                                
                                 • Fetch devices by brand ✅
+                                
                                 • Fetch devices by state ✅
+                                
                                 • Delete a single device ✅
                                 """));
     }

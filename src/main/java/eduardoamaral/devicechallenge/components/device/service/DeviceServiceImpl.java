@@ -35,7 +35,10 @@ public class DeviceServiceImpl implements DeviceService {
                 .findById(UUID.fromString(id))
                 .orElseThrow();
 
-        if(device.isInUse()){
+        if(
+                (request.getBrand() != null || request.getName() != null)
+                 && device.isInUse()
+        ){
             throw new IllegalStateException("Devices in use cannot be updated.");
         }
 
