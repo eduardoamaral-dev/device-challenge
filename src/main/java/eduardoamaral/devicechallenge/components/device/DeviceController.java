@@ -54,9 +54,9 @@ public class DeviceController {
         return ok(deviceService.getByBrand(brand));
     }
 
-    @GetMapping("/find/name/{name}")
-    public ResponseEntity<List<DeviceResponseDTO>> getByName(@PathVariable String name){
-        return ok(deviceService.getByName(name));
+    @GetMapping("/find/state/{state}")
+    public ResponseEntity<List<DeviceResponseDTO>> getByState(@PathVariable String state){
+        return ok(deviceService.getByState(state));
     }
 
     @DeleteMapping("/remove/{deviceId}")
@@ -82,5 +82,10 @@ public class DeviceController {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleValidationExceptions(NoSuchElementException ex) {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleValidationExceptions(IllegalStateException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

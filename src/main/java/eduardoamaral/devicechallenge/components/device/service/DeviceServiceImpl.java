@@ -64,17 +64,17 @@ public class DeviceServiceImpl implements DeviceService {
         return response;
     }
 
-    public List<DeviceResponseDTO> getByName(String name) {
+    public List<DeviceResponseDTO> getByState(String state) {
         return deviceRepository
-                .findByName(name.trim())
+                .findByState(deviceMapper.stringToDeviceState(state))
                 .stream()
                 .map(deviceMapper::toResponse)
                 .toList();
     }
 
-    public List<DeviceResponseDTO> searchDevices(DeviceQuery query) {
-        return List.of();
-    }
+//    public List<DeviceResponseDTO> searchDevices(DeviceQuery query) {
+//        return List.of();
+//    }
 
     public Optional<DeviceResponseDTO> getById(String deviceId) throws IllegalArgumentException{
         return deviceRepository
@@ -83,11 +83,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     public List<DeviceResponseDTO> getAllDevices() {
-        return deviceRepository
+        var response = deviceRepository
                 .findAll()
                 .stream()
                 .map(deviceMapper::toResponse)
                 .toList();
+
+        if(response.isEmpty()) throw new NoSuchElementException();
+        return response;
     }
 
     public void deleteDevice(String deviceId) {
